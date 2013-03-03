@@ -253,10 +253,26 @@
                (clojure.string/split-lines (slurp f)))))
 
 (defn thirteen
+  "Project euler problem 13"
   [d f]
   (bigint (clojure.string/join
                      "" (take d
                               (str (apply + (read-lines-as-numbers f)))))))
+
+(def collatz
+  (memoize (fn [n]
+             (if (= 1 n) [1]
+                  (let [next (if (even? n) (/ n 2) (+ (* 3 n) 1))]
+                    (conj (collatz next) n))))))
+
+(defn collatz-length [n] (count (collatz n)))
+
+(defn fourteen
+  "Project euler problem 14"
+  [n]
+  (reduce
+   #(if (> (collatz-length %1) (collatz-length %2)) %1 %2)
+          (range 1 (+ n 1))))
 
 (defn -main
   "I don't do a whole lot ... yet."

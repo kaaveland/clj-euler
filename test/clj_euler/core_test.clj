@@ -55,3 +55,6 @@
   (testing "Problem thirteen"
     (is (= 5537376230 (thirteen 10 "test/clj_euler/thirteen.txt")))))
 
+(deftest fourteen-test
+  (testing "Problem fourteen"
+    (is (= 837799 (fourteen 1000000)))))
