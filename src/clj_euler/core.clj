@@ -155,7 +155,7 @@
 
 (defn pythagorean-triplet? [[a b c]]
   (let [sq #(* % %)]
-    (= (+ (* a a) (* b b)) (* c c))))
+    (= (+ (sq a) (sq b)) (sq c))))
 
 (defn nine
   "Project euler problem 9"
@@ -179,7 +179,53 @@
   [n]
   (reduce + (primes-up-to n)))
 
+(defn read-matrix [path]
+  (let [cont (slurp path)]
+    (vec (map #(vec
+                (map (fn [field] (Integer/parseInt field))
+                     (clojure.string/split % #" ")))
+              (clojure.string/split-lines cont)))))
+
+(defn in-matrix [[x y] dim]
+  (let [legal (set (range dim))]
+    (and (legal x) (legal y))))
+
+(defn diagonals [dim]
+  (let [starts (map #(vec [% 0]) (range dim))
+        right (fn [[x y]] [(+ x 1) (+ y 1)])
+        left (fn [[x y]] [(- x 1) (+ y 1)])
+        legal (fn [pt] (in-matrix pt dim))]
+    (concat (map #(take-while legal
+                              (iterate right %))
+                 starts)
+            (map #(take-while legal
+                              (iterate left %))
+                 starts))))
+
+(defn transpose [m]
+  (apply mapv vector m))
+
+(defn all-cols-rows-diagonals
+  [matrix]
+  (let [rows matrix
+        cols (transpose matrix)
+        diags (map (fn [diag] (map
+                               (fn [[x y]] (nth (nth matrix y) x)) diag))
+                   (diagonals (count matrix)))]
+    (concat rows cols diags)))
+
+(defn eleven
+  "Project euler problem 11"
+  [n f]
+  (let [matrix (read-matrix f)
+        product #(reduce * %)
+        data (all-cols-rows-diagonals matrix)]
+    (apply max
+           (map product
+                (apply concat (map (fn [seq] (group n (vec seq))) data))))))
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (println "Hello, World!"))
+  args)
+
