@@ -224,6 +224,28 @@
            (map product
                 (apply concat (map (fn [seq] (group n (vec seq))) data))))))
 
+(defn subsets
+  [seq]
+  (if (empty? seq) [[]]
+      (let [subs (subsets (rest seq))]
+        (concat subs
+                (map #(conj % (first seq)) subs)))))
+
+(defn divisors
+  [number]
+  (let [factors (factor number)
+        divisors (map #(reduce * %) (remove empty? (subsets factors)))]
+    (set (concat [1 number] divisors))))
+
+(def triangle-numbers
+  (rest (reductions + (range))))
+
+(defn twelve
+  "Project euler problem 12"
+  [n]
+  (first
+   (drop-while #(< (count (divisors %)) n) triangle-numbers)))
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
