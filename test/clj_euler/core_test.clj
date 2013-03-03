@@ -50,3 +50,8 @@
 (deftest twelve-test
   (testing "Problem twelve"
     (is (= 76576500 (twelve 500)))))
+
+(deftest thirteen-test
+  (testing "Problem thirteen"
+    (is (= 5537376230 (thirteen 10 "test/clj_euler/thirteen.txt")))))
+

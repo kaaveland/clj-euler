@@ -246,6 +246,18 @@
   (first
    (drop-while #(< (count (divisors %)) n) triangle-numbers)))
 
+(defn read-lines-as-numbers
+  [f]
+  (map bigint
+       (remove empty?
+               (clojure.string/split-lines (slurp f)))))
+
+(defn thirteen
+  [d f]
+  (bigint (clojure.string/join
+                     "" (take d
+                              (str (apply + (read-lines-as-numbers f)))))))
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
